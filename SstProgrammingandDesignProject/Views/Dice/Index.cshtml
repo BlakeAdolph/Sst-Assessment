@@ -1,0 +1,45 @@
+﻿@model SstProgrammingandDesignProject.Models.DiceModel
+
+@using (Html.BeginForm("Roll", "Dice", FormMethod.Post, new { id = "diceForm" }))
+{
+    <p>Favored Face for Die 1: @Html.TextBoxFor(m => m.FavoredFaceDie1) @Html.ValidationMessageFor(m => m.FavoredFaceDie1, "", new { @class = "text-danger" })</p>
+    <p>Factor for Die 1: @Html.TextBoxFor(m => m.FactorDie1) @Html.ValidationMessageFor(m => m.FactorDie1, "", new { @class = "text-danger" })</p>
+    <p>Favored Face for Die 2: @Html.TextBoxFor(m => m.FavoredFaceDie2) @Html.ValidationMessageFor(m => m.FavoredFaceDie2, "", new { @class = "text-danger" })</p>
+    <p>Factor for Die 2: @Html.TextBoxFor(m => m.FactorDie2) @Html.ValidationMessageFor(m => m.FactorDie2, "", new { @class = "text-danger" })</p>
+    <p>Number of Rolls: @Html.TextBoxFor(m => m.NumberOfRolls) @Html.ValidationMessageFor(m => m.NumberOfRolls, "", new { @class = "text-danger" })</p>
+    <input type="submit" value="Roll Dice" />
+}
+
+@if (ViewBag.Results != null)
+{
+    var resultsModel = (DiceRollResults)ViewBag.Results;
+    <h2>Results</h2>
+    @for (int i = 0; i < resultsModel.Rolls.Count; i++)
+    {
+        var roll = resultsModel.Rolls[i];
+        <div>[Roll @(i + 1)]: Die 1: @roll[0] - Die 2: @roll[1]</div>
+    }
+}
+
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#diceForm').submit(function (e) {
+                if (!$(this).valid()) {
+                    e.preventDefault();
+                    $('.field-validation-error').each(function () {
+                        var errorMessage = $(this).text().trim();
+                        if (errorMessage) {
+                            Swal.fire({
+                            title: 'Validation Error',
+                            icon: 'error'
+                        });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
